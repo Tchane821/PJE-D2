@@ -1,0 +1,37 @@
+<html>
+	<head>
+		<title>PJE-D Marqueurs et Interaction</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+		<meta charset="UTF-8"/>
+		<style>
+html,body {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	text-align: center;
+	overflow-x: hidden;
+}
+.portrait canvas {
+	transform-origin: 0 0;
+	transform: rotate(-90deg) translateX(-100%);
+}
+.desktop canvas {
+	transform: scale(-1, 1);
+}
+		</style>
+	</head>
+	<body>
+
+		<h1>Reactable 3D</h1>
+
+		<script type='text/javascript'>
+			  var artoolkit_wasm_url = 'lib/artoolkit_wasm.wasm';
+		</script>
+		<script src="lib/artoolkit_wasm.js"></script>
+		<script async src="lib/three.min.js"></script>
+
+		<script src="utils.js"></script>
+		<script src="modules.js"></script>
+		<script src="main.js"></script>
+	</body>
+</html>
