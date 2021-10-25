@@ -51,7 +51,7 @@ let ARThreeOnLoad = function () {
         scene.add(camera);
 
         //******************Set constants here ***************************
-        const distanceThreshold = 2.5;
+        const distanceThreshold = 5;
         const markerWidth = 1;
         const centerPos = new THREE.Vector3(0, 0, -10);
 
@@ -61,17 +61,22 @@ let ARThreeOnLoad = function () {
         let addModule = function (markerID, markerModule) {
             markerModule.setID(markerID);
             scene.add(markerModule.node);
+            scene.add(markerModule.link);
             modules[markerID] = markerModule;
         };
 
 
         //******************Add your modules here************************
 
-        const geometry = new THREE.SphereGeometry( 15, 32, 16 );
-        const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
-        const sphere = new THREE.Mesh( geometry, material );
-        sphere.position.set(0,0,-2);
+        const geometry = new THREE.SphereGeometry(0.7, 15, 10);
+        const material = new THREE.MeshBasicMaterial({color: 0xffffff});
+        const sphere = new THREE.Mesh(geometry, material);
+        sphere.position.copy(centerPos);
         scene.add(sphere);
+
+        addModule(1, new SourceModule());
+        addModule(0, new ControlModule());
+        addModule(2, new EffectModule());
 
         //*******************Complete loop function***********************
         let tick = function () {
@@ -110,7 +115,7 @@ let ARThreeOnLoad = function () {
 
         console.log("Starting loop");
         tick();
-    };
+    }
 
 };
 
