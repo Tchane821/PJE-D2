@@ -67,6 +67,12 @@ class ARModule {
             }
             if (this.canConnectToCenter() && !linkedUp) {
                 this.posToConnect.copy(centerPos);
+                linkedUp = true;
+            }
+            if (!linkedUp) {
+                let pos = new THREE.Vector3();
+                this.node.getWorldPosition(pos);
+                this.posToConnect.copy(pos);
             }
             this.updateLink();
         }

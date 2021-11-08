@@ -51,7 +51,7 @@ let ARThreeOnLoad = function () {
         scene.add(camera);
 
         //******************Set constants here ***************************
-        const distanceThreshold = 5;
+        const distanceThreshold = 2.5;
         const markerWidth = 1;
         const centerPos = new THREE.Vector3(0, 0, -10);
 
