@@ -10,11 +10,12 @@ class ARModule {
         this.link = new THREE.Mesh();
         this.posToConnect = new THREE.Vector3();
         this.audioOutputeID = -2;
-        this.audioNode = new Tone.ToneAudioNode;
+        this.audioNode = new Tone.ToneAudioNode();
         this.mappings = {"posZ": "", "rotX": "", "rotY": "", "rotZ": ""}
         this.debugZone = document.getElementById("debugZone");
         this.debugMark = document.createElement("p");
         this.debugZone.append(this.debugMark);
+        //this.meter = new Tone.Meter();
     };
 
     setID(id) {
@@ -69,12 +70,12 @@ class ARModule {
                 if (id !== this.id.toString()) {
                     const m = modules[id];
                     const dstToMod = this.distanceOf(m, this);
-                    if (dstToMod <= threshold && dstToMod < dstTemp) {
+                    if (dstToMod <= threshold && dstToMod < dstTemp && m.node.visible) {
                         if (this.canConnectToModule(m)) {
                             m.node.getWorldPosition(this.posToConnect);
                             dstTemp = dstToMod;
                             linkedUp = true;
-                            this.audioOutputeID = id;
+                            this.audioOutputeID = parseInt(id,10);
                         }
                     }
                 }
@@ -86,7 +87,7 @@ class ARModule {
             }
             if (!linkedUp) {
                 let pos = new THREE.Vector3();
-                this.node.getWorldPosition(pos);
+                //this.node.getWorldPosition(pos);
                 this.posToConnect.copy(pos);
                 this.audioOutputeID = -2;
             }
@@ -105,8 +106,22 @@ class ARModule {
             clearTimeout(this.to);
         }
         this.wasVisible = false;
+
         this.processMapping();
         this.updateAudio(modules[this.audioOutputeID]);
+
+        /*//modif scale
+        let curMat = this.node.matrix;
+        const pos = new THREE.Vector3();
+        const rotat = new THREE.Quaternion();
+        let scale = new THREE.Vector3();
+        let nextMat = new THREE.Matrix4();
+        curMat.decompose(pos, rotat, scale);
+        const val = this.meter.getValue() ;
+        scale.multiplyScalar(val);
+        nextMat.compose(pos,rotat,scale);
+        //this.node.applyMatrix4(nextMat);
+        console.log(val);*/
     }
 
     updateLink() {
@@ -217,7 +232,8 @@ class EffectModule extends ARModule {
     };
 
     canConnectToModule(mod) {
-        return mod instanceof EffectModule;
+        return mod instanceof EffectModule && mod.audioOutputeID !== this.id;
+
     };
 
 }

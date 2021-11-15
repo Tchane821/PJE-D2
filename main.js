@@ -77,10 +77,10 @@ let ARThreeOnLoad = function () {
         sphere.position.copy(centerPos);
         scene.add(sphere);
 
-        addModule(2, new MelodyModule());
+        //addModule(2, new MelodyModule());
         addModule(0, new FilterDist());
-        addModule(1, new DrumsModule());
-        //addModule(2, new EffectModule());
+        //addModule(1, new DrumsModule());
+        addModule(3, new DelayModule());
 
         //*******************Complete loop function***********************
         let tick = function () {

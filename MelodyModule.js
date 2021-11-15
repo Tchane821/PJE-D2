@@ -10,7 +10,7 @@ class MelodyModule extends SourceModule {
         this.mappings.rotZ = "NoteDuration";
         this.mappings.rotY = "Tempo";
         this.audioNode = new Tone.AMSynth();
-
+        //this.audioNode.connect(this.meter);
 
         this.loop = new Tone.Loop(time => {
             this.audioNode.triggerAttackRelease(this.notes[this.curNote], this.noteDuration, time);
