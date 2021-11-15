@@ -12,6 +12,9 @@ class ARModule {
         this.audioOutputeID = -2;
         this.audioNode = new Tone.ToneAudioNode;
         this.mappings = {"posZ": "", "rotX": "", "rotY": "", "rotZ": ""}
+        this.debugZone = document.getElementById("debugZone");
+        this.debugMark = document.createElement("p");
+        this.debugZone.append(this.debugMark);
     };
 
     setID(id) {
@@ -48,7 +51,14 @@ class ARModule {
         let wp2 = new THREE.Vector3();
         m1.node.getWorldPosition(wp1);
         m2.node.getWorldPosition(wp2);
-        return Math.sqrt((Math.pow(wp1.x, 2) - Math.pow(wp2.x, 2)) + (Math.pow(wp1.y, 2) - Math.pow(wp2.y, 2)) + (Math.pow(wp1.z, 2) - Math.pow(wp2.z, 2)));
+        return this.distanceWp(wp1, wp2);
+    }
+
+    distanceWp(wp1, wp2) {
+        const x = Math.pow(wp1.x - wp2.x, 2);
+        const y = Math.pow(wp1.y - wp2.y, 2);
+        const z = Math.pow(wp1.z - wp2.z, 2);
+        return Math.sqrt(x + y + z);
     }
 
     process(modules, threshold, centerPos) {
@@ -106,7 +116,9 @@ class ARModule {
         this.link.material = new THREE.MeshBasicMaterial({color: 0xb73acd});
     }
 
-    setAudioParameter(parameterName, value) {}
+    // value est entre 0 et 1 pour les rotation
+    setAudioParameter(parameterName, value) {
+    }
 
     processMapping() {
         let pos = new THREE.Vector3();
@@ -118,15 +130,21 @@ class ARModule {
             this.setAudioParameter(this.mappings.posZ, pos.z);
         }
         if (this.mappings.rotX !== "") {
-            this.setAudioParameter(this.mappings.rotX, rot.x )
+            this.setAudioParameter(this.mappings.rotX, (rot.x + Math.PI) / (2 * Math.PI))
         }
         if (this.mappings.rotY !== "") {
-            this.setAudioParameter(this.mappings.rotY, rot.y )
+            this.setAudioParameter(this.mappings.rotY, (rot.y + Math.PI) / (2 * Math.PI))
         }
         if (this.mappings.rotZ !== "") {
-            this.setAudioParameter(this.mappings.rotZ, rot.z / Math.PI )
+            this.setAudioParameter(this.mappings.rotZ, (rot.z + Math.PI) / (2 * Math.PI))
         }
+    }
 
+    debugPrint() {
+        let wp1 = new THREE.Vector3();
+        this.node.getWorldPosition(wp1);
+        let dst = this.distanceWp(wp1, this.posToConnect);
+        this.debugMark.innerHTML = `Id: ${this.id}  Visible: ${this.node.visible}  DistanceToConnect: ${dst}`;
     }
 
     updateAudio(mod) {

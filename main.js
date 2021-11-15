@@ -51,9 +51,9 @@ let ARThreeOnLoad = function () {
         scene.add(camera);
 
         //******************Set constants here ***************************
-        const distanceThreshold = 8;
+        const distanceThreshold = 3;
         const markerWidth = 1;
-        const centerPos = new THREE.Vector3(0, 0, -10);
+        const centerPos = new THREE.Vector3(0, 0, -13);
 
         //*******************Code for modules management here ***********
         let modules = {};
@@ -79,7 +79,7 @@ let ARThreeOnLoad = function () {
 
         addModule(2, new MelodyModule());
         addModule(0, new FilterDist());
-        //addModule(0, new ControlModule());
+        addModule(1, new DrumsModule());
         //addModule(2, new EffectModule());
 
         //*******************Complete loop function***********************
@@ -101,6 +101,7 @@ let ARThreeOnLoad = function () {
             //Process modules
             for (let m in modules) {
                 modules[m].process(modules, distanceThreshold, centerPos);
+                modules[m].debugPrint();
             }
 
 
