@@ -5,16 +5,16 @@
 let ARThreeOnLoad = function () {
     console.log("Loading ARThree");
 
-    let arController = new ARController(320, 240, 'lib/camera_para.dat');
+    let arController = new ARController(640, 360, 'lib/camera_para.dat');
 
     //Choose source here
     arController.onload = function () {
 
         //Uncomment and set video file (ogg, mp4, webm)
-        loadVideo("data/video.webm", arController, start);
+        //loadVideo("data/video.webm", arController, start);
 
         //Uncomment to use camera
-        //loadCamera(arController, start);
+        loadCamera(arController, start);
     };
 
 
@@ -51,7 +51,7 @@ let ARThreeOnLoad = function () {
         scene.add(camera);
 
         //******************Set constants here ***************************
-        const distanceThreshold = 2.5;
+        const distanceThreshold = 8;
         const markerWidth = 1;
         const centerPos = new THREE.Vector3(0, 0, -10);
 
@@ -68,15 +68,19 @@ let ARThreeOnLoad = function () {
 
         //******************Add your modules here************************
 
+        // Start Tone
+        Tone.Transport.start();
+
         const geometry = new THREE.SphereGeometry(0.7, 15, 10);
         const material = new THREE.MeshBasicMaterial({color: 0xffffff});
         const sphere = new THREE.Mesh(geometry, material);
         sphere.position.copy(centerPos);
         scene.add(sphere);
 
-        addModule(1, new SourceModule());
-        addModule(0, new ControlModule());
-        addModule(2, new EffectModule());
+        addModule(2, new MelodyModule());
+        addModule(0, new FilterDist());
+        //addModule(0, new ControlModule());
+        //addModule(2, new EffectModule());
 
         //*******************Complete loop function***********************
         let tick = function () {

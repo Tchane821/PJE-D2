@@ -9,6 +9,9 @@ class ARModule {
         this.markerMatrix = new Float64Array(12);
         this.link = new THREE.Mesh();
         this.posToConnect = new THREE.Vector3();
+        this.audioOutputeID = -2;
+        this.audioNode = new Tone.ToneAudioNode;
+        this.mappings = {"posZ": "", "rotX": "", "rotY": "", "rotZ": ""}
     };
 
     setID(id) {
@@ -61,6 +64,7 @@ class ARModule {
                             m.node.getWorldPosition(this.posToConnect);
                             dstTemp = dstToMod;
                             linkedUp = true;
+                            this.audioOutputeID = id;
                         }
                     }
                 }
@@ -68,11 +72,13 @@ class ARModule {
             if (this.canConnectToCenter() && !linkedUp) {
                 this.posToConnect.copy(centerPos);
                 linkedUp = true;
+                this.audioOutputeID = -1;
             }
             if (!linkedUp) {
                 let pos = new THREE.Vector3();
                 this.node.getWorldPosition(pos);
                 this.posToConnect.copy(pos);
+                this.audioOutputeID = -2;
             }
             this.updateLink();
         }
@@ -81,14 +87,16 @@ class ARModule {
             this.to = setTimeout((function () {
                 this.node.visible = false;
                 this.link.visible = false;
+                this.audioOutputeID = -2;
             }).bind(this), 500);
-
         } else {
             this.link.visible = true;
             this.node.visible = true;
             clearTimeout(this.to);
         }
         this.wasVisible = false;
+        this.processMapping();
+        this.updateAudio(modules[this.audioOutputeID]);
     }
 
     updateLink() {
@@ -96,6 +104,55 @@ class ARModule {
         this.node.getWorldPosition(pos);
         this.link.geometry = new THREE.TubeGeometry(new THREE.LineCurve3(this.posToConnect, pos), 20, 0.2, 10);
         this.link.material = new THREE.MeshBasicMaterial({color: 0xb73acd});
+    }
+
+    setAudioParameter(parameterName, value) {}
+
+    processMapping() {
+        let pos = new THREE.Vector3();
+        let quat = new THREE.Quaternion();
+        let n = new THREE.Vector3();
+        this.node.matrix.decompose(pos, quat, n);
+        let rot = new THREE.Euler().setFromQuaternion(quat, 'XYZ');
+        if (this.mappings.posZ !== "") {
+            this.setAudioParameter(this.mappings.posZ, pos.z);
+        }
+        if (this.mappings.rotX !== "") {
+            this.setAudioParameter(this.mappings.rotX, rot.x )
+        }
+        if (this.mappings.rotY !== "") {
+            this.setAudioParameter(this.mappings.rotY, rot.y )
+        }
+        if (this.mappings.rotZ !== "") {
+            this.setAudioParameter(this.mappings.rotZ, rot.z / Math.PI )
+        }
+
+    }
+
+    updateAudio(mod) {
+        if (this.audioOutputeID === -2) {
+            this.disconectAudio();
+        } else {
+            if (this.audioOutputeID === -1) {
+                this.connectAudioToCenter();
+            } else {
+                if (mod.audioNode.input !== undefined) {
+                    this.connectAudioToModule(mod);
+                }
+            }
+        }
+    }
+
+    connectAudioToModule(mod) {
+        this.audioNode.connect(mod.audioNode.input);
+    }
+
+    connectAudioToCenter() {
+        this.audioNode.toDestination();
+    }
+
+    disconectAudio() {
+        this.audioNode.disconnect();
     }
 
 }
