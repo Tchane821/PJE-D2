@@ -37,7 +37,7 @@ class MelodyModule extends SourceModule {
         let wp1 = new THREE.Vector3();
         this.node.getWorldPosition(wp1);
         let dst = this.distanceWp(wp1, this.posToConnect);
-        this.debugMark.innerHTML = `Name: MelodyM NoteDuration: ${this.noteDuration}    Id: ${this.id}  Visible: ${this.node.visible}   DistanceToConnect: ${dst}`;
+        this.debugMark.innerHTML = `Name: MelodyM NoteDuration: ${this.noteDuration}    Id: ${this.id}  Visible: ${this.node.visible}   DistanceToConnect: ${dst} `; //MeterV: ${this.meter.getValue()}
     }
 
 

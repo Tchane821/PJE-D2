@@ -16,6 +16,10 @@ class ARModule {
         this.debugMark = document.createElement("p");
         this.debugZone.append(this.debugMark);
         //this.meter = new Tone.Meter();
+        //this.meter.set({
+        //  normalRange : true,
+        //  smoothing : 1
+        //});
     };
 
     setID(id) {
@@ -75,7 +79,7 @@ class ARModule {
                             m.node.getWorldPosition(this.posToConnect);
                             dstTemp = dstToMod;
                             linkedUp = true;
-                            this.audioOutputeID = parseInt(id,10);
+                            this.audioOutputeID = parseInt(id, 10);
                         }
                     }
                 }
@@ -109,6 +113,20 @@ class ARModule {
 
         this.processMapping();
         this.updateAudio(modules[this.audioOutputeID]);
+
+        /* A TESTER
+        * pour modifier le scale d'un Object3D j'utilise applyMatrix4(Ma Nouvelle Matrice )
+        * et j'ai changer le scale dans cette matrice
+        * ya pas une meilleur solution ?
+        * REP
+        * Si vous êtes sur un Object3D  appelé mesh dont on ne modifie pas directement la matrice
+        * (donc qui n'a pas this.matrixAutoUpdate=false) , vous pouvez faire  mesh.scale.set(1.5,1.5,1.5)
+        *  par exempl ça modifiera la matrice automatiquement derrière
+        * */
+
+
+        //this.node.scale.set();
+
 
         /*//modif scale
         let curMat = this.node.matrix;

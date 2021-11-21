@@ -8,6 +8,7 @@ class DrumsModule extends SourceModule {
         this.audioNode = new Tone.Gain();
         this.kick.connect(this.audioNode);
         this.snare.connect(this.audioNode);
+        //this.audioNode.connect(this.meter);
 
         this.mappings.rotZ = "switch";
 
