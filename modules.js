@@ -15,11 +15,11 @@ class ARModule {
         this.debugZone = document.getElementById("debugZone");
         this.debugMark = document.createElement("p");
         this.debugZone.append(this.debugMark);
-        //this.meter = new Tone.Meter();
-        //this.meter.set({
-        //  normalRange : true,
-        //  smoothing : 1
-        //});
+        this.meter = new Tone.Meter();
+        this.meter.set({
+            normalRange: true,
+            smoothing: 0.2
+        });
     };
 
     setID(id) {
@@ -91,7 +91,6 @@ class ARModule {
             }
             if (!linkedUp) {
                 let pos = new THREE.Vector3();
-                //this.node.getWorldPosition(pos);
                 this.posToConnect.copy(pos);
                 this.audioOutputeID = -2;
             }
@@ -114,32 +113,10 @@ class ARModule {
         this.processMapping();
         this.updateAudio(modules[this.audioOutputeID]);
 
-        /* A TESTER
-        * pour modifier le scale d'un Object3D j'utilise applyMatrix4(Ma Nouvelle Matrice )
-        * et j'ai changer le scale dans cette matrice
-        * ya pas une meilleur solution ?
-        * REP
-        * Si vous êtes sur un Object3D  appelé mesh dont on ne modifie pas directement la matrice
-        * (donc qui n'a pas this.matrixAutoUpdate=false) , vous pouvez faire  mesh.scale.set(1.5,1.5,1.5)
-        *  par exempl ça modifiera la matrice automatiquement derrière
-        * */
 
+        const v = this.meter.getValue() * 0.5 + 1;
+        this.node.children[0].scale.set(v, v, v);
 
-        //this.node.scale.set();
-
-
-        /*//modif scale
-        let curMat = this.node.matrix;
-        const pos = new THREE.Vector3();
-        const rotat = new THREE.Quaternion();
-        let scale = new THREE.Vector3();
-        let nextMat = new THREE.Matrix4();
-        curMat.decompose(pos, rotat, scale);
-        const val = this.meter.getValue() ;
-        scale.multiplyScalar(val);
-        nextMat.compose(pos,rotat,scale);
-        //this.node.applyMatrix4(nextMat);
-        console.log(val);*/
     }
 
     updateLink() {
@@ -218,8 +195,11 @@ class SourceModule extends ARModule {
 
         const geometry = new THREE.BoxGeometry(1, 1, 1);
         const material = new THREE.MeshBasicMaterial({color: 0x00ff00});
-        const cube = new THREE.Mesh(geometry, material);
-        this.node.add(cube);
+        const mesh = new THREE.Mesh(geometry, material);
+        this.node.add(mesh);
+
+        this.audioNode = new Tone.Synth();
+        this.audioNode.connect(this.meter);
     };
 
     canConnectToCenter() {
@@ -229,6 +209,12 @@ class SourceModule extends ARModule {
     canConnectToModule(mod) {
         return mod instanceof EffectModule;
     }
+
+    disconectAudio() {
+        super.disconectAudio()
+        this.audioNode.connect(this.meter);
+    }
+
 }
 
 class EffectModule extends ARModule {
@@ -241,8 +227,11 @@ class EffectModule extends ARModule {
 
         const geometry = new THREE.TorusKnotGeometry(0.4, 0.1, 25, 8, 2, 3);
         const material = new THREE.MeshBasicMaterial({color: 0xff0000});
-        const torusKnot = new THREE.Mesh(geometry, material);
-        this.node.add(torusKnot);
+        const mesh = new THREE.Mesh(geometry, material);
+        this.node.add(mesh);
+
+        this.audioNode = new Tone.Chorus();
+        this.audioNode.output.connect(this.meter);
     };
 
     canConnectToCenter() {
@@ -251,8 +240,12 @@ class EffectModule extends ARModule {
 
     canConnectToModule(mod) {
         return mod instanceof EffectModule && mod.audioOutputeID !== this.id;
-
     };
+
+    disconectAudio() {
+        super.disconectAudio();
+        this.audioNode.output.connect(this.meter);
+    }
 
 }
 
@@ -266,8 +259,8 @@ class ControlModule extends ARModule {
 
         const geometry = new THREE.TorusGeometry(0.5, 0.2, 8, 18, 6.3);
         const material = new THREE.MeshBasicMaterial({color: 0x0000ff});
-        const torus = new THREE.Mesh(geometry, material);
-        this.node.add(torus);
+        const mesh = new THREE.Mesh(geometry, material);
+        this.node.add(mesh);
     };
 
     canConnectToCenter() {

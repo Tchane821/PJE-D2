@@ -8,7 +8,6 @@ class DrumsModule extends SourceModule {
         this.audioNode = new Tone.Gain();
         this.kick.connect(this.audioNode);
         this.snare.connect(this.audioNode);
-        //this.audioNode.connect(this.meter);
 
         this.mappings.rotZ = "switch";
 
@@ -47,6 +46,5 @@ class DrumsModule extends SourceModule {
         let dst = this.distanceWp(wp1, this.posToConnect);
         this.debugMark.innerHTML = `Name: DrumsM PatSelect: ${this.kickPat} Id: ${this.id}  Visible: ${this.node.visible}  DistanceToConnect: ${dst}`;
     }
-
 
 }
