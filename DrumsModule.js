@@ -9,10 +9,11 @@ class DrumsModule extends SourceModule {
         this.kick.connect(this.audioNode);
         this.snare.connect(this.audioNode);
 
-        this.mappings.rotZ = "switch";
+        this.mappings.rotZ = "switchPattern";
+        this.parameter = ["switchPattern"];
 
-        this.kickPatterns =  [[1, 0, 1, 0, 1, 0, 1, 0], [1, 1, 1, 1, 1, 1, 1, 1],[1, 0, 1, 0, 1, 0, 1, 0]];
-        this.snarePatterns = [[1, 0, 1, 0, 0, 1, 1, 0], [1, 1, 1, 1, 1, 1, 1, 1],[1, 0, 1, 0, 1, 0, 1, 0]];
+        this.kickPatterns = [[1, 0, 1, 0, 1, 0, 1, 0], [1, 1, 1, 1, 1, 1, 1, 1], [1, 0, 1, 0, 1, 0, 1, 0]];
+        this.snarePatterns = [[1, 0, 1, 0, 0, 1, 1, 0], [1, 1, 1, 1, 1, 1, 1, 1], [1, 0, 1, 0, 1, 0, 1, 0]];
 
         this.curNote = 0;
         this.kickPat = 0;
@@ -32,7 +33,7 @@ class DrumsModule extends SourceModule {
     }
 
     setAudioParameter(parameterName, value) {
-        if (parameterName === "switch") {
+        if (parameterName === "switchPattern") {
             const maxIdPat = this.kickPatterns.length - 1;
             const val = Math.round(value * maxIdPat);
             this.kickPat = val;

@@ -5,13 +5,16 @@ class ARModule {
         this.node = new THREE.Object3D();
         this.node.matrixAutoUpdate = false;
         this.node.visible = false;
+        this.mesh = new THREE.Mesh();
         this.wasVisible = false;
         this.markerMatrix = new Float64Array(12);
         this.link = new THREE.Mesh();
         this.posToConnect = new THREE.Vector3();
         this.audioOutputeID = -2;
         this.audioNode = new Tone.ToneAudioNode();
-        this.mappings = {"posZ": "", "rotX": "", "rotY": "", "rotZ": ""}
+        this.mappings = {"posZ": "", "rotX": "", "rotY": "", "rotZ": ""};
+        this.mappingsChoice = ["posZ", "rotX", "rotY", "rotZ"];
+        this.parameter = [];
         this.debugZone = document.getElementById("debugZone");
         this.debugMark = document.createElement("p");
         this.debugZone.append(this.debugMark);
@@ -102,6 +105,7 @@ class ARModule {
                 this.node.visible = false;
                 this.link.visible = false;
                 this.audioOutputeID = -2;
+                this.disconectAudio();
             }).bind(this), 500);
         } else {
             this.link.visible = true;
@@ -115,7 +119,7 @@ class ARModule {
 
 
         const v = this.meter.getValue() * 0.5 + 1;
-        this.node.children[0].scale.set(v, v, v);
+        this.mesh.scale.set(v, v, v);
 
     }
 
@@ -183,6 +187,23 @@ class ARModule {
         this.audioNode.disconnect();
     }
 
+    displayConfig() {
+        if (this.node.visible) {
+            let config = document.getElementById("config");
+            config.innerHTML = '';
+            for (let k = 0; k < this.parameter.length; k++) {
+                let line = document.createElement('li');
+                let txt = "<p style='width: 45%; display: inline-block'>" + this.parameter[k] + "</p> <select style='display: inline-block; width: 40%' name='movementMapping' id='movemap'>"
+                for (let k = 0; k < this.mappingsChoice.length; k++) {
+                    txt += `<option value="${this.mappingsChoice[k]}">${this.mappingsChoice[k]}</option>`;
+                }
+                txt += "</select>";
+                line.innerHTML = txt;
+                config.append(line);
+            }
+        }
+    }
+
 }
 
 class SourceModule extends ARModule {
@@ -195,8 +216,9 @@ class SourceModule extends ARModule {
 
         const geometry = new THREE.BoxGeometry(1, 1, 1);
         const material = new THREE.MeshBasicMaterial({color: 0x00ff00});
-        const mesh = new THREE.Mesh(geometry, material);
-        this.node.add(mesh);
+        this.mesh = new THREE.Mesh(geometry, material);
+        this.mesh.userData = this;
+        this.node.add(this.mesh);
 
         this.audioNode = new Tone.Synth();
         this.audioNode.connect(this.meter);
@@ -227,8 +249,9 @@ class EffectModule extends ARModule {
 
         const geometry = new THREE.TorusKnotGeometry(0.4, 0.1, 25, 8, 2, 3);
         const material = new THREE.MeshBasicMaterial({color: 0xff0000});
-        const mesh = new THREE.Mesh(geometry, material);
-        this.node.add(mesh);
+        this.mesh = new THREE.Mesh(geometry, material);
+        this.mesh.userData = this;
+        this.node.add(this.mesh);
 
         this.audioNode = new Tone.Chorus();
         this.audioNode.output.connect(this.meter);
@@ -259,8 +282,9 @@ class ControlModule extends ARModule {
 
         const geometry = new THREE.TorusGeometry(0.5, 0.2, 8, 18, 6.3);
         const material = new THREE.MeshBasicMaterial({color: 0x0000ff});
-        const mesh = new THREE.Mesh(geometry, material);
-        this.node.add(mesh);
+        this.mesh = new THREE.Mesh(geometry, material);
+        this.mesh.userData = this;
+        this.node.add(this.mesh);
     };
 
     canConnectToCenter() {

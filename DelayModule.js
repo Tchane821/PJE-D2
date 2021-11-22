@@ -6,20 +6,19 @@ class DelayModule extends EffectModule {
         this.delay = new Tone.FeedbackDelay("2n", 0.5);
         this.audioNode = this.delay;
         this.outputAudioNode = this.delay;
-        this.mappings.rotZ = "delayTime";
-        this.mappings.rotX = "feedBack";
-        this.dt;
-        this.fb;
+        this.parameter = ["DelayTime","FeedBack"];
+        this.mappings.rotZ = "DelayTime";
+        this.mappings.rotX = "FeedBack";
     }
 
     setAudioParameter(parameterName, value) {
 
-        if (parameterName === "delayTime") {
+        if (parameterName === "FelayTime") {
             const val = (Math.round(value * 14) + 2).toString() + "n";
             this.dt = val;
             this.delay.set({delayTime: val});
         }
-        if (parameterName === "feedBack") {
+        if (parameterName === "FeedBack") {
             const val = value * 0.6;
             this.fb = val;
             this.delay.set({feedback: val});

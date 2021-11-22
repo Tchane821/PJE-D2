@@ -32,6 +32,8 @@ function initializeRenderer(arController, renderer) {
 		}
 	}
 	//document.body.insertBefore(renderer.domElement, document.body.firstChild);
-	document.body.appendChild(renderer.domElement);
+	//document.body.appendChild(renderer.domElement);
+	const val = document.getElementById("canvas");
+	val.append(renderer.domElement);
 }
 

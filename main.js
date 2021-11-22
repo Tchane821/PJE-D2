@@ -43,9 +43,30 @@ let ARThreeOnLoad = function () {
             plane.rotation.z = Math.PI / 2;
         }
 
+        // ***** Gestion pointer *****
+        function onPointerDown(event) {
+            const valX = event.pageX;
+            const valY = event.pageY;
+            const rect = renderer.domElement.getBoundingClientRect(); //(rect.x, rect.y) et (rect.width, rect.height)
+            const coordCentre = new THREE.Vector2(rect.x + rect.width / 2, rect.y + rect.height / 2);
+            const px = (valX - coordCentre.x) / (rect.width / 2) * -1;
+            const py = (valY - coordCentre.y) / (rect.height / 2) * -1;
+            const pointer = new THREE.Vector2(px, py);
+            const raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera(pointer,camera);
+            let intersects = raycaster.intersectObjects(scene.children,true);
+            for (let i = 0; i < intersects.length; i++){
+                if (intersects[i].object.userData.audioNode != null){
+                    intersects[i].object.userData.displayConfig();
+                }
+            }
+        }
+
+        window.addEventListener('pointerdown', onPointerDown, false);
+
         //Create main scene
         let scene = new THREE.Scene();
-        let camera = new THREE.Camera();
+        let camera = new THREE.PerspectiveCamera();
         camera.matrixAutoUpdate = false;
         camera.projectionMatrix.fromArray(arController.getCameraMatrix());
         scene.add(camera);
@@ -121,7 +142,6 @@ let ARThreeOnLoad = function () {
         console.log("Starting loop");
         tick();
     }
-
 };
 
 //Start everything when the webassembly has been loaded

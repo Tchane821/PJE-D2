@@ -9,6 +9,7 @@ class MelodyModule extends SourceModule {
         this.mappings.posZ = "Harmonicity";
         this.mappings.rotZ = "NoteDuration";
         this.mappings.rotY = "Tempo";
+        this.parameter = ["Harmonicity","NoteDuration","Tempo"];
         this.audioNode = new Tone.AMSynth();
 
 

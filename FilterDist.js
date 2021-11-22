@@ -8,6 +8,7 @@ class FilterDist extends EffectModule {
 
         this.mappings.posZ = "Filter";
         this.mappings.rotZ = "Distortion";
+        this.parameter = ["Filter","Distortion"];
 
     }
 
