@@ -13,7 +13,7 @@ class DelayModule extends EffectModule {
 
     setAudioParameter(parameterName, value) {
 
-        if (parameterName === "FelayTime") {
+        if (parameterName === "DelayTime") {
             const val = (Math.round(value * 14) + 2).toString() + "n";
             this.dt = val;
             this.delay.set({delayTime: val});

@@ -5,7 +5,7 @@ function loadVideo(vid, arController, onLoaded) {
 	video.src=vid;
 	video.autoplay=true;
 	onLoaded(video);
-};
+}
 
 function loadCamera(arController, onLoaded) {
 	let conf = {maxARVideoSize: 320,

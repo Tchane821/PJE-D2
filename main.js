@@ -1,6 +1,6 @@
 'use_strict';
 
-
+let modSelected = null;
 //window.ARThreeOnLoad = function() {
 let ARThreeOnLoad = function () {
     console.log("Loading ARThree");
@@ -16,7 +16,6 @@ let ARThreeOnLoad = function () {
         //Uncomment to use camera
         loadCamera(arController, start);
     };
-
 
     function start(video) {
         console.log("Initializing");
@@ -43,6 +42,7 @@ let ARThreeOnLoad = function () {
             plane.rotation.z = Math.PI / 2;
         }
 
+
         // ***** Gestion pointer *****
         function onPointerDown(event) {
             const valX = event.pageX;
@@ -53,14 +53,38 @@ let ARThreeOnLoad = function () {
             const py = (valY - coordCentre.y) / (rect.height / 2) * -1;
             const pointer = new THREE.Vector2(px, py);
             const raycaster = new THREE.Raycaster();
-            raycaster.setFromCamera(pointer,camera);
-            let intersects = raycaster.intersectObjects(scene.children,true);
-            for (let i = 0; i < intersects.length; i++){
-                if (intersects[i].object.userData.audioNode != null){
-                    intersects[i].object.userData.displayConfig();
+            raycaster.setFromCamera(pointer, camera);
+            let intersects = raycaster.intersectObjects(scene.children, true);
+            for (let i = 0; i < intersects.length; i++) {
+                if (intersects[i].object.userData.audioNode != null) {
+                    modSelected = intersects[i].object.userData;
+                    displayConfig();
                 }
             }
         }
+
+        function displayConfig() {
+            if (modSelected.node.visible) {
+                let config = document.getElementById("config");
+                config.innerHTML = '';
+                for (let q = 0; q < modSelected.parameter.length; q++) {
+                    let line = document.createElement('li');
+                    let txt = `<p style="width: 45%; display: inline-block">${modSelected.parameter[q]}</p> <select onchange=modifMapping(value,name) style="width: 40%" name=${modSelected.parameter[q]} id="movemap">`;
+                    txt += "<option value=''>-- None --</option>";
+                    for (let k = 0; k < modSelected.mappingsChoice.length; k++) {
+                        if (modSelected.mappings[modSelected.mappingsChoice[k]] === modSelected.parameter[q]) {
+                            txt += `<option selected="selected" value="${modSelected.mappingsChoice[k]}">${modSelected.mappingsChoice[k]}</option>`;
+                        } else {
+                            txt += `<option value="${modSelected.mappingsChoice[k]}">${modSelected.mappingsChoice[k]}</option>`;
+                        }
+                    }
+                    txt += "</select>";
+                    line.innerHTML = txt;
+                    config.append(line);
+                }
+            }
+        }
+
 
         window.addEventListener('pointerdown', onPointerDown, false);
 
@@ -143,6 +167,18 @@ let ARThreeOnLoad = function () {
         tick();
     }
 };
+
+function modifMapping(val, name) {
+    console.log(val, name, modSelected.id);
+    for (const mapV in modSelected.mappings) {
+        if (modSelected.mappings[mapV] === name) {
+            modSelected.mappings[mapV] = "";
+        }
+    }
+    if (val !== "") {
+        modSelected.mappings[val] = name;
+    }
+}
 
 //Start everything when the webassembly has been loaded
 window.addEventListener('artoolkit-loaded', () => {

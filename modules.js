@@ -187,22 +187,7 @@ class ARModule {
         this.audioNode.disconnect();
     }
 
-    displayConfig() {
-        if (this.node.visible) {
-            let config = document.getElementById("config");
-            config.innerHTML = '';
-            for (let k = 0; k < this.parameter.length; k++) {
-                let line = document.createElement('li');
-                let txt = "<p style='width: 45%; display: inline-block'>" + this.parameter[k] + "</p> <select style='display: inline-block; width: 40%' name='movementMapping' id='movemap'>"
-                for (let k = 0; k < this.mappingsChoice.length; k++) {
-                    txt += `<option value="${this.mappingsChoice[k]}">${this.mappingsChoice[k]}</option>`;
-                }
-                txt += "</select>";
-                line.innerHTML = txt;
-                config.append(line);
-            }
-        }
-    }
+
 
 }
 
@@ -296,5 +281,6 @@ class ControlModule extends ARModule {
     }
 
 }
+
 
 
