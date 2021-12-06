@@ -7,8 +7,8 @@ class DelayModule extends EffectModule {
         this.audioNode = this.delay;
         this.outputAudioNode = this.delay;
         this.parameter = ["DelayTime","FeedBack"];
-        this.mappings.rotZ = "DelayTime";
-        this.mappings.rotX = "FeedBack";
+        this.mappings.ROT_Z = "DelayTime";
+        this.mappings.ROT_X = "FeedBack";
     }
 
     setAudioParameter(parameterName, value) {

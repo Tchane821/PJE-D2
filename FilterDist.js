@@ -6,8 +6,8 @@ class FilterDist extends EffectModule {
         this.audioNode = new Tone.Filter(1500,"highpass");
         this.distortion.connect(this.audioNode);
 
-        this.mappings.posZ = "Filter";
-        this.mappings.rotZ = "Distortion";
+        this.mappings.POS_Z = "Filter";
+        this.mappings.ROT_Z = "Distortion";
         this.parameter = ["Filter","Distortion"];
 
     }

@@ -12,13 +12,14 @@ class ARModule {
         this.posToConnect = new THREE.Vector3();
         this.audioOutputeID = -2;
         this.audioNode = new Tone.ToneAudioNode();
-        this.mappings = {"posZ": "", "rotX": "", "rotY": "", "rotZ": ""};
-        this.mappingsChoice = ["posZ", "rotX", "rotY", "rotZ"];
+        this.mappings = {"POS_Z": "", "ROT_X": "", "ROT_Y": "", "ROT_Z": "", "LFO": ""};
+        this.mappingsChoice = ["POS_Z", "ROT_X", "ROT_Y", "ROT_Z", "LFO"];
         this.parameter = [];
         this.debugZone = document.getElementById("debugZone");
         this.debugMark = document.createElement("p");
         this.debugZone.append(this.debugMark);
         this.meter = new Tone.Meter();
+        this.LFOM = null;
         this.meter.set({
             normalRange: true,
             smoothing: 0.2
@@ -140,17 +141,20 @@ class ARModule {
         let n = new THREE.Vector3();
         this.node.matrix.decompose(pos, quat, n);
         let rot = new THREE.Euler().setFromQuaternion(quat, 'XYZ');
-        if (this.mappings.posZ !== "") {
-            this.setAudioParameter(this.mappings.posZ, pos.z);
+        if (this.mappings.POS_Z !== "") {
+            this.setAudioParameter(this.mappings.POS_Z, pos.z);
         }
-        if (this.mappings.rotX !== "") {
-            this.setAudioParameter(this.mappings.rotX, (rot.x + Math.PI) / (2 * Math.PI))
+        if (this.mappings.ROT_X !== "") {
+            this.setAudioParameter(this.mappings.ROT_X, (rot.x + Math.PI) / (2 * Math.PI));
         }
-        if (this.mappings.rotY !== "") {
-            this.setAudioParameter(this.mappings.rotY, (rot.y + Math.PI) / (2 * Math.PI))
+        if (this.mappings.ROT_Y !== "") {
+            this.setAudioParameter(this.mappings.ROT_Y, (rot.y + Math.PI) / (2 * Math.PI));
         }
-        if (this.mappings.rotZ !== "") {
-            this.setAudioParameter(this.mappings.rotZ, (rot.z + Math.PI) / (2 * Math.PI))
+        if (this.mappings.ROT_Z !== "") {
+            this.setAudioParameter(this.mappings.ROT_Z, (rot.z + Math.PI) / (2 * Math.PI));
+        }
+        if (this.mappings.LFO !== "" && this.LFOM !== null) {
+            this.setAudioParameter(this.mappings.LFO, this.LFOM.meter.getValue() - 0.5);
         }
     }
 
@@ -186,8 +190,6 @@ class ARModule {
     disconectAudio() {
         this.audioNode.disconnect();
     }
-
-
 
 }
 
@@ -270,6 +272,14 @@ class ControlModule extends ARModule {
         this.mesh = new THREE.Mesh(geometry, material);
         this.mesh.userData = this;
         this.node.add(this.mesh);
+
+        this.mappings = {"POS_Z": "", "ROT_X": "", "ROT_Y": "", "ROT_Z": ""};
+        this.mappingsChoice = ["POS_Z", "ROT_X", "ROT_Y", "ROT_Z"];
+        this.mappingsChoice = ["POS_Z", "ROT_X", "ROT_Y", "ROT_Z"];
+
+        this.audioNode = new Tone.LFO();
+        this.audioNode.output.connect(this.meter);
+
     };
 
     canConnectToCenter() {
@@ -278,6 +288,11 @@ class ControlModule extends ARModule {
 
     canConnectToModule(mod) {
         return true;
+    }
+
+    disconectAudio() {
+        super.disconectAudio();
+        this.audioNode.output.connect(this.meter);
     }
 
 }

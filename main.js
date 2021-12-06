@@ -126,6 +126,7 @@ let ARThreeOnLoad = function () {
         addModule(0, new FilterDist());
         addModule(1, new DrumsModule());
         addModule(3, new DelayModule());
+        addModule(4, new LfoModule());
 
         //*******************Complete loop function***********************
         let tick = function () {
@@ -169,7 +170,6 @@ let ARThreeOnLoad = function () {
 };
 
 function modifMapping(val, name) {
-    console.log(val, name, modSelected.id);
     for (const mapV in modSelected.mappings) {
         if (modSelected.mappings[mapV] === name) {
             modSelected.mappings[mapV] = "";

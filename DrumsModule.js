@@ -9,7 +9,7 @@ class DrumsModule extends SourceModule {
         this.kick.connect(this.audioNode);
         this.snare.connect(this.audioNode);
 
-        this.mappings.rotZ = "switchPattern";
+        this.mappings.ROT_Z = "switchPattern";
         this.parameter = ["switchPattern"];
 
         this.kickPatterns = [[1, 0, 1, 0, 1, 0, 1, 0], [1, 1, 1, 1, 1, 1, 1, 1], [1, 0, 1, 0, 1, 0, 1, 0]];

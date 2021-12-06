@@ -6,10 +6,10 @@ class MelodyModule extends SourceModule {
         this.curNote = 0;
         this.Tempo = 1;
         this.noteDuration = 0.01;
-        this.mappings.posZ = "Harmonicity";
-        this.mappings.rotZ = "NoteDuration";
-        this.mappings.rotY = "Tempo";
-        this.parameter = ["Harmonicity","NoteDuration","Tempo"];
+        this.mappings.POS_Z = "Harmonicity";
+        this.mappings.ROT_Z = "NoteDuration";
+        this.mappings.ROT_Y = "Tempo";
+        this.parameter = ["Harmonicity", "NoteDuration", "Tempo"];
         this.audioNode = new Tone.AMSynth();
 
 
@@ -30,7 +30,6 @@ class MelodyModule extends SourceModule {
         }
         if (parameterName === "Tempo") {
             this.Tempo = value;
-
         }
     }
 
