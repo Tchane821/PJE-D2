@@ -128,6 +128,7 @@ let ARThreeOnLoad = function () {
         addModule(1, new DrumsModule());
         addModule(3, new DelayModule());
         addModule(4, new LfoModule());
+        addModule(5,new TunnelModule());
 
         //*******************Complete loop function***********************
         let tick = function () {
