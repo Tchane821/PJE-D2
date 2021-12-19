@@ -201,12 +201,6 @@ class SourceModule extends ARModule {
         this.wasVisible = true;
         this.markerMatrix = new Float64Array(12);
 
-        const geometry = new THREE.BoxGeometry(1, 1, 1);
-        const material = new THREE.MeshBasicMaterial({color: 0x00ff00});
-        this.mesh = new THREE.Mesh(geometry, material);
-        this.mesh.userData = this;
-        this.node.add(this.mesh);
-
         this.audioNode = new Tone.Synth();
         this.audioNode.connect(this.meter);
     };

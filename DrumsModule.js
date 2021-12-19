@@ -3,6 +3,11 @@ class DrumsModule extends SourceModule {
 
     constructor() {
         super();
+        const geometry = new THREE.BoxGeometry(1, 1, 1);
+        const material = new THREE.MeshBasicMaterial({color: 0x00ff00});
+        this.mesh = new THREE.Mesh(geometry, material);
+        this.mesh.userData = this;
+        this.node.add(this.mesh);
         this.kick = new Tone.MembraneSynth();
         this.snare = new Tone.NoiseSynth();
         this.audioNode = new Tone.Gain();

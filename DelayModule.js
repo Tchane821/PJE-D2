@@ -3,10 +3,14 @@ class DelayModule extends EffectModule {
 
     constructor() {
         super();
+        const geometry = new THREE.DodecahedronGeometry(0.8, 0);
+        const material = new THREE.MeshBasicMaterial({color: 0xff0000});
+        this.mesh = new THREE.Mesh(geometry, material);
+        this.node.add(this.mesh);
         this.delay = new Tone.FeedbackDelay("2n", 0.5);
         this.audioNode = this.delay;
         this.outputAudioNode = this.delay;
-        this.parameter = ["DelayTime","FeedBack"];
+        this.parameter = ["DelayTime", "FeedBack"];
         this.mappings.ROT_Z = "DelayTime";
         this.mappings.ROT_X = "FeedBack";
     }

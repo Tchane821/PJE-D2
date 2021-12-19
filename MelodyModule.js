@@ -2,6 +2,11 @@ class MelodyModule extends SourceModule {
 
     constructor() {
         super();
+        const geometry = new THREE.OctahedronGeometry(0.8, 0);
+        const material = new THREE.MeshBasicMaterial({color: 0x00ff00});
+        this.mesh = new THREE.Mesh(geometry, material);
+        this.node.add(this.mesh);
+        this.mesh.userData = this;
         this.notes = ["C4", "D4", "E4"];
         this.curNote = 0;
         this.Tempo = 1;
