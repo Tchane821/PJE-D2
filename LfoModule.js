@@ -2,7 +2,7 @@ class LfoModule extends ControlModule {
 
     constructor() {
         super();
-        this.audioNode = new Tone.LFO("2n", 0, 1).start();
+        this.audioNode = new Tone.LFO("1n", 0, 1).start();
 
         this.mappings.ROT_Z = "Tempo";
         this.parameter = ["Tempo"];
@@ -27,7 +27,7 @@ class LfoModule extends ControlModule {
     }
 
     connectAudioToModule(mod) {
-        super.canConnectToModule(mod);
+        super.connectAudioToModule(mod);
         this.moduleConnect = mod;
         mod.LFOM = this;
     }
@@ -36,6 +36,5 @@ class LfoModule extends ControlModule {
         super.disconectAudio();
         this.moduleConnect.LFOM = null;
     }
-
 
 }

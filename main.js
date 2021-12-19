@@ -56,8 +56,9 @@ let ARThreeOnLoad = function () {
             raycaster.setFromCamera(pointer, camera);
             let intersects = raycaster.intersectObjects(scene.children, true);
             for (let i = 0; i < intersects.length; i++) {
-                if (intersects[i].object.userData.audioNode != null) {
+                if (intersects[i].object.userData.audioNode != null && intersects[i].object.userData.node.visible) {
                     modSelected = intersects[i].object.userData;
+                    console.log("id select : ", intersects[i].object.userData.id);
                     displayConfig();
                 }
             }
@@ -178,6 +179,7 @@ function modifMapping(val, name) {
     if (val !== "") {
         modSelected.mappings[val] = name;
     }
+    console.log(name,"->",val);
 }
 
 //Start everything when the webassembly has been loaded
